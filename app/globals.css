@@ -2,32 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+/* .messages-list {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: calc(100vh - 40px - 82px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+.channels-list {
+  height: calc(100vh - 40px - 100px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+} */
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  body {
+    @apply bg-zinc-100 h-dvh;
+  }
+
+  h1 {
+    @apply text-2xl text-center m-3;
+  }
+
+  .black-border {
+    @apply border border-zinc-400 m-0.5 p-1;
+  }
+
+  .chatroom-container {
+    @apply flex flex-col h-full;
+  }
+
+  .chat-container {
+    @apply flex flex-row flex-1;
+  }
+
+  .channels-container {
+    @apply flex flex-col w-1/4 max-w-xl min-w-min;
+  }
+
+  .messages-container {
+    @apply flex flex-col flex-1;
+  }
+
+  .join-channel-container {
+    @apply flex flex-row justify-between mb-1;
+  }
+
+  .new-message-container {
+    @apply flex flex-row items-center mt-1;
+  }
+
+  .channels-list {
+    @apply flex-1;
+  }
+
+  .messages-list {
+    @apply flex-1;
+  }
+
+  .no-channels-joined {
+    @apply text-center py-2 px-1;
+  }
+
+  .no-new-messages {
+    @apply p-2 font-semibold;
+  }
+
+  .channel-name-input {
+    @apply border border-slate-400 rounded-sm p-0.5 min-w-32 w-full;
+  }
+
+  .new-message-input {
+    @apply border border-slate-400 rounded-sm p-0.5 resize-none w-full;
+  }
+
+  .join-button {
+    @apply bg-white text-blue-700 px-5 rounded-sm border border-blue-700;
+  }
+
+  .send-button {
+    @apply text-white bg-blue-700 px-5 rounded-sm ml-1 h-4/5;
   }
 }

@@ -1,36 +1,159 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### Learning Notes and Tutorial
 
-## Getting Started
+0. Credits and Inspiration
 
-First, run the development server:
+I built a chatroom app based off of [this project](https://github.com/thuyanduong/pusher-chatroom/tree/master)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. [Create a NextJS App](https://nextjs.org/docs/getting-started/installation)
+
+`https://nextjs.org/docs/getting-started/installation`
+
+```
+What is your project named? nextjs-pusher-chatroom
+Would you like to use TypeScript? No
+Would you like to use ESLint? Yes
+Would you like to use Tailwind CSS? Yes
+Would you like to use `src/` directory? No
+Would you like to use App Router? (recommended) Yes
+Would you like to customize the default import alias (@/*)? No
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Start the App
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+`npm run dev`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Open up the app in the browser: http://localhost:3000/
 
-## Learn More
+3. [Learn Basic Tailwind](https://tailwindcss.com/docs/functions-and-directives)
 
-To learn more about Next.js, take a look at the following resources:
+You can edit the `globals.css` file and add custom CSS classes:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```css
+@layer utilities {
+  .custom-class {
+    @apply text-red-700 bg-lime-600  /* red text with green background */;
+  }
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+  body {
+    @apply bg-zinc-100; /*Remove the body styling and use this instead*/
+  }
+}
+```
 
-## Deploy on Vercel
+```jsx
+<div className="custom-class">
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Create Header Component
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```js
+"use client";
+// components/Header.js
+export default function Header() {
+  return (
+    <div className="black-border">
+      <h1>NextJS Pusher Chatroom App</h1>
+    </div>
+  );
+}
+```
+
+5. Create Basic Home (ChatRoom) page
+
+```js
+"use client";
+import Header from "@/components/Header";
+// page.js
+export default function Home() {
+  return (
+    <div className="chatroom-container">
+      <Header />
+    </div>
+  );
+}
+```
+
+6. Create Channels Component
+
+```js
+"use client";
+// components/Channels.js
+export default function Channels() {
+  return (
+    <div className="channels-container black-border">
+      <div className="join-channel-container">
+        <input
+          className="channel-name-input"
+          type="text"
+          id="join-channel"
+          minLength={4}
+          maxLength={32}
+          placeholder="Channel to join"
+        />
+        <button className="join-button">+Join</button>
+      </div>
+
+      <div className="channels-list">
+        <h6 className="no-channels-joined">
+          You haven't joined any channels yet
+        </h6>
+      </div>
+    </div>
+  );
+}
+```
+
+```js
+// page.js
+export default function Home() {
+  return (
+    <div className="chatroom-container">
+      <Header />
+      <div className="chat-container">
+        <Channels />
+      </div>
+    </div>
+  );
+}
+```
+
+7. Create Chat Component
+
+```js
+"use client";
+// components/Chat.js
+const maxLength = 256;
+export default function Chat() {
+  return (
+    <div className="messages-container black-border">
+      <div className="messages-list">
+        <p className="no-new-messages">No new messages since joining...</p>
+      </div>
+      <div className="new-message-container">
+        <textarea
+          className="new-message-input"
+          id="new-message"
+          maxLength={maxLength}
+          placeholder="Your message..."
+        />
+        <button className="send-button">Send</button>
+      </div>
+    </div>
+  );
+}
+```
+
+```js
+// page.js
+export default function Home() {
+  return (
+    <div className="chatroom-container">
+      <Header />
+      <div className="chat-container">
+        <Channels />
+        <Chat />
+      </div>
+    </div>
+  );
+}
+```

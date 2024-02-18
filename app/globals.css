@@ -16,7 +16,7 @@
 
 @layer utilities {
   body {
-    @apply bg-zinc-100 h-dvh;
+    @apply bg-zinc-50 h-dvh;
   }
 
   h1 {
@@ -24,11 +24,15 @@
   }
 
   .black-border {
-    @apply border border-zinc-400 m-0.5 p-1;
+    @apply border border-zinc-400 m-0.5 p-1 rounded-sm;
   }
 
   .chatroom-container {
     @apply flex flex-col h-full;
+  }
+
+  .header-container {
+    @apply flex flex-row justify-center items-center;
   }
 
   .chat-container {
@@ -36,7 +40,7 @@
   }
 
   .channels-container {
-    @apply flex flex-col w-1/4 max-w-xl min-w-min;
+    @apply flex flex-col w-1/4 max-w-lg min-w-min;
   }
 
   .messages-container {
@@ -59,6 +63,10 @@
     @apply flex-1;
   }
 
+  .user-status {
+    @apply flex flex-row items-center;
+  }
+
   .no-channels-joined {
     @apply text-center py-2 px-1;
   }
@@ -72,14 +80,81 @@
   }
 
   .new-message-input {
-    @apply border border-slate-400 rounded-sm p-0.5 resize-none w-full;
+    @apply border border-slate-400 rounded-sm p-0.5 resize-none w-full rounded-sm;
   }
 
   .join-button {
-    @apply bg-white text-blue-700 px-5 rounded-sm border border-blue-700;
+    @apply text-blue-700 bg-white hover:bg-gray-100 px-5 rounded-sm border border-blue-700;
   }
 
   .send-button {
-    @apply text-white bg-blue-700 px-5 rounded-sm ml-1 h-4/5;
+    @apply text-white bg-blue-700 hover:bg-blue-500 px-5 rounded-sm ml-1 h-4/5;
+  }
+
+  .exit-button {
+    @apply flex items-center text-gray-700  hover:bg-gray-200 px-3 py-1 rounded-sm border border-gray-700;
+  }
+
+  .username {
+    @apply text-lg flex-1 pl-0.5;
+  }
+
+  .modal {
+    @apply items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50;
+  }
+
+  .modal-background {
+    @apply opacity-25 fixed inset-0 z-40 bg-black;
+  }
+
+  .modal-box {
+    @apply min-w-80 w-1/3 max-w-lg mx-auto rounded-sm shadow-lg bg-white p-10;
+  }
+
+  .modal-header {
+    @apply text-xl;
+  }
+
+  .modal-content {
+    @apply my-6;
+  }
+
+  .modal-buttons-container {
+    @apply flex items-center justify-end;
+  }
+
+  .display-name-button {
+    @apply bg-blue-700 hover:bg-blue-500 text-white px-4 py-2 rounded-sm shadow;
+  }
+
+  .channel {
+    @apply hover:bg-zinc-300 p-2 border-b border-zinc-400 cursor-pointer;
+  }
+
+  .active {
+    @apply bg-zinc-200;
+  }
+
+  .channel-name {
+    @apply text-lg font-semibold;
+  }
+
+  .remove-channel {
+    @apply hover:bg-red-700 float-right cursor-pointer;
+  }
+
+  .timestamp {
+    @apply text-sm;
+  }
+
+  .message {
+    @apply p-2 border-b border-zinc-400 cursor-pointer;
+  }
+
+  .user-info {
+    @apply font-semibold;
+  }
+
+  .content {
   }
 }

@@ -122,7 +122,6 @@ export default function Home() {
 ```js
 "use client";
 // components/Chat.js
-const maxLength = 256;
 export default function Chat() {
   return (
     <div className="messages-container black-border">
@@ -133,7 +132,6 @@ export default function Chat() {
         <textarea
           className="new-message-input"
           id="new-message"
-          maxLength={maxLength}
           placeholder="Your message..."
         />
         <button className="send-button">Send</button>
@@ -157,3 +155,37 @@ export default function Home() {
   );
 }
 ```
+
+8. Create Modal Component
+
+```js
+"use client";
+
+export default function UserModal() {
+  return (
+    <div>
+      <div className="modal">
+        <div className="modal-box">
+          <div className="modal-header">
+            <h2>Choose a display name</h2>
+          </div>
+          <div className="modal-content">
+            <input
+              className="border border-slate-400 rounded-sm p-0.5 w-full"
+              placeholder="Display Name"
+            />
+          </div>
+          <div className="modal-buttons-container">
+            <button className="display-name-button">Submit</button>
+          </div>
+        </div>
+      </div>
+      <div className="modal-background"></div>
+    </div>
+  );
+}
+```
+
+9. Create React Context
+* [Learn about React Context](https://legacy.reactjs.org/docs/context.html)
+* [Implement it in NextJS]()

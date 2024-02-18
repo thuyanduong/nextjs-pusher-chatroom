@@ -1,5 +1,4 @@
-### Learning Notes and Tutorial
-
+### Learning Notes
 0. Credits and Inspiration
 
 I built a chatroom app based off of [this project](https://github.com/thuyanduong/pusher-chatroom/tree/master)

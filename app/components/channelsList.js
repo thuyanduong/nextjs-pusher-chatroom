@@ -36,7 +36,7 @@ export default function Channels() {
       <div className="channels-list">
         {channelNames.length === 0 ? (
           <h6 className="no-channels-joined">
-            You haven't joined any channels yet
+            You haven&apos;t joined any channels yet
           </h6>
         ) : (
           channelNames.map((name) => <Channel name={name} key={name} />)

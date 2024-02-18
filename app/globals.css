@@ -27,24 +27,40 @@
     @apply border border-zinc-400 m-0.5 p-1 rounded-sm;
   }
 
-  .chatroom-container {
-    @apply flex flex-col h-full;
-  }
-
   .header-container {
     @apply flex flex-row justify-center items-center;
   }
 
-  .chat-container {
-    @apply flex flex-row flex-1;
+  .chatroom-container {
+    @apply flex flex-col h-full;
+  }
+
+  .chat-container-col {
+    @apply flex flex-1 flex-col h-fit overflow-hidden;
+  }
+
+  .chat-container-row {
+    @apply flex flex-1 overflow-hidden;
+  }
+
+  .messages-container {
+    @apply flex flex-1 flex-col overflow-hidden;
+  }
+
+  .messages-list {
+    @apply flex flex-col flex-1 overflow-y-auto;
+  }
+
+  .message {
+    @apply p-2 border-b border-zinc-400 cursor-pointer;
   }
 
   .channels-container {
     @apply flex flex-col w-1/4 max-w-lg min-w-min;
   }
 
-  .messages-container {
-    @apply flex flex-col flex-1;
+  .channels-list {
+    @apply flex-1 overflow-y-auto;
   }
 
   .join-channel-container {
@@ -54,17 +70,8 @@
   .new-message-container {
     @apply flex flex-row items-center mt-1;
   }
-
-  .channels-list {
-    @apply flex-1;
-  }
-
-  .messages-list {
-    @apply flex-1;
-  }
-
   .user-status {
-    @apply flex flex-row items-center;
+    @apply flex flex-row items-center pt-2 border-t border-zinc-400 ;
   }
 
   .no-channels-joined {
@@ -147,14 +154,7 @@
     @apply text-sm;
   }
 
-  .message {
-    @apply p-2 border-b border-zinc-400 cursor-pointer;
-  }
-
   .user-info {
     @apply font-semibold;
-  }
-
-  .content {
   }
 }

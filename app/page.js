@@ -6,11 +6,11 @@ import UserModal from "@/app/components/userModal";
 import ChatContext from "@/app/lib/context/chatContext";
 import { useContext } from "react";
 
-if (typeof window !== "undefined") {
-  window.addEventListener("beforeunload", (e) => {
-    e.returnValue = "Are you sure you want to leave? You will lose your state";
-  });
-}
+// if (typeof window !== "undefined") {
+//   window.addEventListener("beforeunload", (e) => {
+//     e.returnValue = "Are you sure you want to leave? You will lose your state";
+//   });
+// }
 
 export default function Home() {
   const { user } = useContext(ChatContext);
@@ -19,9 +19,11 @@ export default function Home() {
     <div className="chatroom-container">
       <Header />
       {!user && <UserModal />}
-      <div className="chat-container">
-        <Channels />
-        <Chat />
+      <div className="chat-container-col">
+        <div className="chat-container-row">
+          <Channels />
+          <Chat />
+        </div>
       </div>
     </div>
   );

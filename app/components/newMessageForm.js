@@ -8,7 +8,7 @@ export default function NewMessageForm() {
 
     const checkSendMessage = (e) => {
         e.preventDefault();
-        if (!textInput) return;
+        if (!textInput.trim()) return;
         sendMessage(textInput.trim());
         setTextInput("");
       };

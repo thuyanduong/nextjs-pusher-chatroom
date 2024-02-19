@@ -5,7 +5,6 @@ getPusherInstance
 const pusherServer = getPusherInstance();
 
 export async function POST(req) {
-  console.log("authenticating pusher perms...")
   const data = await req.text();
   const [socketId, channelName] = data
     .split("&")

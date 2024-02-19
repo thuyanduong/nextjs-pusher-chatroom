@@ -1,6 +1,6 @@
 import PusherClient from "pusher-js";
 
-PusherClient.logToConsole = true;
+// PusherClient.logToConsole = true;
 
 export const pusherClient = new PusherClient(
   process.env.NEXT_PUBLIC_PUSHER_KEY,

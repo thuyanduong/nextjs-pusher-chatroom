@@ -1,7 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ChatContext from "../lib/context/chatContext";
 
 export default function Channel(props) {
+  const [hasNotification, setHasNotification] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+
   const { currChannel, channels, removeChannel, setCurrChannel } =
     useContext(ChatContext);
   const { name } = props;
@@ -14,20 +17,32 @@ export default function Channel(props) {
     removeChannel(name);
   }
 
-  useEffect(() => {
-  }, [currChannel]);
+  function handleSelect() {
+    setCurrChannel(channel);
+    setHasNotification(false);
+    setNotificationCount(0);
+  }
 
+  useEffect(() => {
+    if (currChannel.name !== name) {
+      console.log("last message changed!!!");
+      setHasNotification(true);
+      setNotificationCount((prevState) => prevState + 1);
+    }
+  }, [lastMessage]);
+
+  console.log(hasNotification)
   return (
     <div
       className={`channel ${currChannel.name === name ? "active" : ""}`}
-      onClick={() => {
-        setCurrChannel(channel);
-      }}
+      onClick={handleSelect}
     >
       <div className="channel-title">
         <h5 className="channel-name">{name}</h5>
-        <div >
-          <svg className="remove-channel w-6 h-6" onClick={handleRemove}
+        <div>
+          <svg
+            className="remove-channel w-6 h-6"
+            onClick={handleRemove}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -42,10 +57,11 @@ export default function Channel(props) {
           </svg>
         </div>
       </div>
-      <span className="timestamp">
+      <div className="timestamp">
         Last message:{" "}
         {lastMessage ? new Date(lastMessage.createdAt).toLocaleString() : "N/A"}
-      </span>
+        {hasNotification && <span className="notification">{notificationCount}</span>}
+      </div>
     </div>
   );
 }

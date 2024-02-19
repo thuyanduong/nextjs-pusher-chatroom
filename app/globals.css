@@ -155,7 +155,7 @@
   }
 
   .timestamp {
-    @apply inline-block text-xs;
+    @apply whitespace-nowrap inline-block text-xs;
   }
 
   .notification {

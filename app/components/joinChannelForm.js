@@ -4,7 +4,7 @@ import ChatContext from "../lib/context/chatContext";
 
 export default function JoinChannelForm() {
   const [textInput, setTextInput] = useState("");
-  const {joinChannel, channels} = useContext(ChatContext)
+  const {joinChannel, channels, setCurrChannel} = useContext(ChatContext)
 
   const checkJoin = (e) => {
     e.preventDefault()
@@ -14,6 +14,8 @@ export default function JoinChannelForm() {
 
     if (!channels[val]) {
       joinChannel(val)
+    }else{
+      setCurrChannel(val)
     }
     setTextInput("")
   }

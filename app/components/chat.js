@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useRef, useEffect } from "react";
 import ChatContext from "../lib/context/chatContext";
 import Message from "./message";
 import NewMessageForm from "./newMessageForm";
@@ -8,6 +8,15 @@ import NewMessageForm from "./newMessageForm";
 export default function Chat() {
   const { channels, currChannel } = useContext(ChatContext);
   const channel = channels[currChannel] || [];
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [channels, currChannel]);
 
   return (
     <div className="messages-container black-border">
@@ -19,6 +28,7 @@ export default function Chat() {
           channel.messages.map((message, index) => (
             <Message key={index} message={message} />
           ))}
+        <div ref={messagesEndRef} />
       </div>
       <NewMessageForm />
     </div>

@@ -1,31 +1,30 @@
 "use client";
 
 import ChatContext from "@/app/lib/context/chatContext";
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import Channel from "./channel";
-import { pusherClient } from "../lib/pusher/pusherClient";
 import JoinChannelForm from "./joinChannelForm";
 
 export default function Channels() {
-  const {
-    user,
-    currChannel,
-    channels,
-    logout,
-    channelNames,
-    setChannels,
-    joinChannel,
-    joinedChannel,
-    setJoinedChannel,
-  } = useContext(ChatContext);
+  const { user, channels, logout, channelNames, joinChannel } =
+    useContext(ChatContext);
+  const channelsEndRef = useRef(null);
 
-  let sub
   // Auto-join general channel when username is set
   useEffect(() => {
     if (user && !channels.general) {
       joinChannel("general");
     }
   }, [user]);
+
+  useEffect(() => {
+    console.log("scroll to bottom of channels list");
+    scrollToBottom();
+  }, [channelNames]);
+
+  const scrollToBottom = () => {
+    channelsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="channels-container black-border">
@@ -41,6 +40,7 @@ export default function Channels() {
         ) : (
           channelNames.map((name) => <Channel name={name} key={name} />)
         )}
+        <div ref={channelsEndRef} />
       </div>
       {user && (
         <div className="user-status">

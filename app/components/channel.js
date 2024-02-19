@@ -4,8 +4,8 @@ import { useContext } from "react";
 import ChatContext from "../lib/context/chatContext";
 
 export default function Channel(props) {
-  const { currChannel, channels, removeChannel, setCurrChannel } = useContext(ChatContext);
   const { name } = props;
+  const { currChannel, channels, removeChannel, setCurrChannel } = useContext(ChatContext);
 
   const channel = channels[name];
   const lastMessage = channel && channel.messages[channel.messages.length - 1];
@@ -16,7 +16,7 @@ export default function Channel(props) {
   }
 
   return (
-    <div
+    <div 
       className={`channel ${currChannel === name ? "active" : ""}`}
       onClick={()=>{setCurrChannel(name)}}
     >

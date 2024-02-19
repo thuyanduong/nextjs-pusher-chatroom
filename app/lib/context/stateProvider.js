@@ -17,7 +17,7 @@ export default function StateProvider(props) {
     setCurrChannel(null);
     setChannels({});
     setUserChannelNames([]);
-    setJoinedChannel(false)
+    setJoinedChannel(false);
     for (const name of userChannelNames) {
       const channel = channels[name];
       channel.sub.unbind("client-message");
@@ -46,7 +46,7 @@ export default function StateProvider(props) {
     delete newChannels[name];
 
     let curChannel = currChannel;
-    if (curChannel.name === name) curChannel = channel[newChannelNames[0]];
+    if (curChannel.name === name) curChannel = channels[newChannelNames[0]];
     setCurrChannel(curChannel);
     setChannels(newChannels);
     setUserChannelNames(newChannelNames);

@@ -1,5 +1,3 @@
-"use client";
-
 import { useContext, useRef, useEffect } from "react";
 import ChatContext from "../lib/context/chatContext";
 import Message from "./message";
@@ -22,10 +20,13 @@ export default function Chat() {
   return (
     <div className="messages-container black-border">
       <div className="messages-list">
-        {currChannel && currChannel.message && currChannel.message.length === 0 && (
-          <p className="no-new-messages">No messages...</p>
-        )}
-        {currChannel && currChannel.messages &&
+        {currChannel &&
+          currChannel.messages &&
+          currChannel.messages.length === 0 && (
+            <p className="no-new-messages">No messages...</p>
+          )}
+        {currChannel &&
+          currChannel.messages &&
           currChannel.messages.map((message, index) => (
             <Message key={index} message={message} />
           ))}

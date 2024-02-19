@@ -4,13 +4,13 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   const body = await req.json();
-  const { author, text, channelId } = body
+  const { author, text, channelId } = body;
   try {
     let message = await prisma.message.create({
       data: {
         author,
-        text, 
-        channelId
+        text,
+        channelId,
       },
     });
     return NextResponse.json(message, { status: 200 });

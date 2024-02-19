@@ -1,11 +1,10 @@
-"use client";
-
 import ChatContext from "@/app/lib/context/chatContext";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Channel from "./channel";
 import JoinChannelForm from "./joinChannelForm";
 
 export default function Channels() {
+  const [isLoading, setIsLoading] = useState(false)
   const { user, channels, logout, userChannelNames, joinChannel, currChannel } =
     useContext(ChatContext);
   const channelsEndRef = useRef(null);
@@ -18,6 +17,7 @@ export default function Channels() {
   }, [user]);
 
   async function postChannel(channelName) {
+    setIsLoading(true)
     const options = {
       method: "POST",
       headers: {
@@ -28,6 +28,7 @@ export default function Channels() {
     fetch("/api/channels", options)
       .then((response) => response.json())
       .then((channel) => {
+        setIsLoading(false)
         let { name } = channel;
         if (!channels[name]) {
           joinChannel(channel);
@@ -54,7 +55,7 @@ export default function Channels() {
       <div className="channels-list">
         {userChannelNames.length === 0 ? (
           <h6 className="no-channels-joined">
-            You haven&apos;t joined any channels yet
+            {isLoading ? "Loading..." : "You haven't joined any channels yet"}
           </h6>
         ) : (
           userChannelNames.map((name) => <Channel name={name} key={name} />)

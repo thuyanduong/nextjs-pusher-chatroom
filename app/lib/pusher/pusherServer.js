@@ -1,4 +1,4 @@
-import PusherServer from 'pusher';
+import PusherServer from "pusher";
 
 let pusherInstance;
 

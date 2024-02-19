@@ -7,20 +7,20 @@ export async function POST(req) {
   try {
     let channel = await prisma.channel.findFirst({
       where: {
-        name
-      }, 
+        name,
+      },
       include: {
-        messages: true
-      }
-    })
-    if(!channel){
+        messages: true,
+      },
+    });
+    if (!channel) {
       channel = await prisma.channel.create({
         data: {
           name,
         },
         include: {
-          messages: true
-        }
+          messages: true,
+        },
       });
     }
     return NextResponse.json(channel, { status: 200 });

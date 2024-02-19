@@ -1,11 +1,11 @@
 "use client";
 
 export default function Message(props) {
-  const { text, user, sent } = props.message;
+  const { text, author, createdAt } = props.message;
   return (
     <div className="message">
       <div>
-        <span className="user-info">{user}</span> <span className="timestamp">- {new Date(sent).toLocaleString()}</span>
+        <span className="user-info">{author}</span> <span className="timestamp">- {new Date(createdAt).toLocaleString()}</span>
       </div>
       <div className="content">{text}</div>
     </div>

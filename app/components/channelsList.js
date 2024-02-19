@@ -6,21 +6,40 @@ import Channel from "./channel";
 import JoinChannelForm from "./joinChannelForm";
 
 export default function Channels() {
-  const { user, channels, logout, channelNames, joinChannel } =
+  const { user, channels, logout, userChannelNames, joinChannel, currChannel } =
     useContext(ChatContext);
   const channelsEndRef = useRef(null);
 
   // Auto-join general channel when username is set
   useEffect(() => {
     if (user && !channels.general) {
-      joinChannel("general");
+      postChannel("general");
     }
   }, [user]);
 
+  async function postChannel(channelName) {
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: channelName }),
+    };
+    fetch("/api/channels", options)
+      .then((response) => response.json())
+      .then((channel) => {
+        let { name } = channel;
+        if (!channels[name]) {
+          joinChannel(channel);
+        } else {
+          setCurrChannel(name);
+        }
+      });
+  }
+
   useEffect(() => {
-    console.log("scroll to bottom of channels list");
     scrollToBottom();
-  }, [channelNames]);
+  }, [userChannelNames]);
 
   const scrollToBottom = () => {
     channelsEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,12 +52,12 @@ export default function Channels() {
       </div>
 
       <div className="channels-list">
-        {channelNames.length === 0 ? (
+        {userChannelNames.length === 0 ? (
           <h6 className="no-channels-joined">
             You haven&apos;t joined any channels yet
           </h6>
         ) : (
-          channelNames.map((name) => <Channel name={name} key={name} />)
+          userChannelNames.map((name) => <Channel name={name} key={name} />)
         )}
         <div ref={channelsEndRef} />
       </div>

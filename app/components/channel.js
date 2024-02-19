@@ -1,11 +1,11 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import ChatContext from "../lib/context/chatContext";
 
 export default function Channel(props) {
-  const { name } = props;
   const { currChannel, channels, removeChannel, setCurrChannel } = useContext(ChatContext);
+  const { name } = props;
 
   const channel = channels[name];
   const lastMessage = channel && channel.messages[channel.messages.length - 1];
@@ -15,10 +15,14 @@ export default function Channel(props) {
     removeChannel(name)
   }
 
+  useEffect(() => {
+    console.log("currChannel updated to", currChannel)
+  }, [currChannel])
+
   return (
-    <div 
-      className={`channel ${currChannel === name ? "active" : ""}`}
-      onClick={()=>{setCurrChannel(name)}}
+    <div
+      className={`channel ${currChannel.name === name ? "active" : ""}`}
+      onClick={()=>{setCurrChannel(channel)}}
     >
       <div className="remove-channel" onClick={handleRemove}>
       <svg
@@ -41,7 +45,7 @@ export default function Channel(props) {
       </h5>
       <span className="timestamp">
         Last message:{" "}
-        {lastMessage ? new Date(lastMessage.sent).toLocaleString() : "N/A"}
+        {lastMessage ? new Date(lastMessage.createdAt).toLocaleString() : "N/A"}
       </span>
     </div>
   );

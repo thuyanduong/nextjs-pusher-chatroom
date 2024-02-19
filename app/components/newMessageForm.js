@@ -4,13 +4,32 @@ import ChatContext from '../lib/context/chatContext';
 
 export default function NewMessageForm() {
     const [textInput, setTextInput] = useState("");
-    const { sendMessage, channels, currChannel } = useContext(ChatContext);
+    const { sendMessage, user, currChannel } = useContext(ChatContext);
+
+    async function postMessage() {
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: textInput, author: user, channelId: currChannel.id }),
+      };
+      fetch("/api/messages", options)
+        .then((response) => response.json())
+        .then((message) => {
+          sendMessage(message);
+          setTextInput("");
+        });
+    }
 
     const checkSendMessage = (e) => {
         e.preventDefault();
         if (!textInput.trim()) return;
-        sendMessage(textInput.trim());
-        setTextInput("");
+        try{
+          postMessage()
+        }catch{
+                //TODO: error handling
+        }
       };
     
       function handleChange(e) {

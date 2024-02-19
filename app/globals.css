@@ -71,7 +71,7 @@
     @apply flex flex-row items-center mt-1;
   }
   .user-status {
-    @apply flex flex-row items-center pt-2 border-t border-zinc-400 ;
+    @apply flex flex-row items-center pt-2 border-t border-zinc-400;
   }
 
   .no-channels-joined {
@@ -139,7 +139,7 @@
   }
 
   .channel {
-    @apply hover:bg-zinc-300 p-2 border-b border-zinc-400 cursor-pointer min-w-min;
+    @apply hover:bg-zinc-300 p-2 border-b border-zinc-400 cursor-pointer;
   }
 
   .channel-title {
@@ -155,7 +155,11 @@
   }
 
   .timestamp {
-    @apply text-sm;
+    @apply inline-block text-xs;
+  }
+
+  .notification {
+    @apply mx-2 p-1 bg-blue-900 text-white rounded-lg;
   }
 
   .user-info {

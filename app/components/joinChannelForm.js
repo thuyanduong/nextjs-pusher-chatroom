@@ -1,4 +1,3 @@
-"use client";
 import { useContext, useState } from "react";
 import ChatContext from "../lib/context/chatContext";
 
@@ -17,7 +16,7 @@ export default function JoinChannelForm() {
     fetch("/api/channels", options)
       .then((response) => response.json())
       .then((channel) => {
-        let {name} = channel
+        let { name } = channel;
         if (!channels[name]) {
           joinChannel(channel);
         } else {

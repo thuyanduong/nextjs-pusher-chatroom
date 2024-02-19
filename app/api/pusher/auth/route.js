@@ -1,6 +1,6 @@
 import { getPusherInstance } from "@/app/lib/pusher/pusherServer";
 
-getPusherInstance
+getPusherInstance;
 
 const pusherServer = getPusherInstance();
 

@@ -1,5 +1,3 @@
-"use client";
-
 import { useContext, useState } from "react";
 import ChatContext from "@/app/lib/context/chatContext";
 

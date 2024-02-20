@@ -16,6 +16,7 @@
 
 ```
 POSTGRES_PRISMA_URL=""
+POSTGRES_URL_NON_POOLING=""
 PUSHER_APP_ID=""
 NEXT_PUBLIC_PUSHER_KEY=""
 PUSHER_SECRET=""
@@ -34,10 +35,11 @@ NEXT_PUBLIC_PUSHER_CLUSTER=""
 `annduong=# CREATE DATABASE chatroomapp;`
 
 - Your postgres connection URL will be the following format: `postgres://[user]:[password]@localhost:[port]/chatroomapp`
-- Add this URL to your `.env` file.
+- Add this URL to your `.env` file as well as as SSL version of the URL. See below for an example:
 
 ```
-"POSTGRES_PRISMA_URL="postgres://postgres:password@localhost:5432/chatapp"
+"POSTGRES_PRISMA_URL="postgres://user:password@localhost:5432/chatroomapp"
+"POSTGRES_URL_NON_POOLING"="postgres://user:password@localhost:5432/chatroomapp?sslmode=require"
 ```
 
 - In your terminal, run `npx prisma db push`.

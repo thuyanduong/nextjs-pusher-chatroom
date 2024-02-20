@@ -16,11 +16,13 @@ export default function JoinChannelForm() {
     fetch("/api/channels", options)
       .then((response) => response.json())
       .then((channel) => {
-        let { name } = channel;
-        if (!channels[name]) {
+        if(channel.error){
+          channel = {name: channelName, messages: []}
+        } 
+        if (!channels[channel.name]) {
           joinChannel(channel);
         } else {
-          setCurrChannel(channels[name]);
+          setCurrChannel(channels[channel.name]);
         }
         setTextInput("");
       });

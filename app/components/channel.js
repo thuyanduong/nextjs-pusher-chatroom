@@ -10,7 +10,7 @@ export default function Channel(props) {
   const { name } = props;
 
   const channel = channels[name];
-  const lastMessage = channel && channel.messages[channel.messages.length - 1];
+  const lastMessage = channel && channel.messages && channel.messages[channel.messages.length - 1];
 
   function handleRemove(e) {
     e.stopPropagation();
@@ -29,7 +29,7 @@ export default function Channel(props) {
       setHasNotification(true);
       setNotificationCount((prevState) => prevState + 1);
     }
-  }, [lastMessage, currChannel.name, name]);
+  }, [lastMessage]);
 
   console.log(hasNotification)
   return (

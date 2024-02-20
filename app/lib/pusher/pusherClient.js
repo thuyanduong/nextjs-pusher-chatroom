@@ -2,10 +2,13 @@ import PusherClient from "pusher-js";
 
 // PusherClient.logToConsole = true;
 
+const PUSHER_KEY = process.env.NEXT_PUBLIC_PUSHER_KEY || "";
+const PUSHER_CLUSTER = process.env.NEXT_PUBLIC_PUSHER_CLUSTER || ""
+
 export const pusherClient = new PusherClient(
-  process.env.NEXT_PUBLIC_PUSHER_KEY,
+  PUSHER_KEY,
   {
-    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    cluster: PUSHER_CLUSTER,
     authEndpoint: "/api/pusher/auth",
   }
 );

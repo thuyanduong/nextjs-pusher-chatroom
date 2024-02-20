@@ -6,20 +6,25 @@ export default function NewMessageForm() {
   const { sendMessage, user, currChannel } = useContext(ChatContext);
 
   async function postMessage() {
+    const messageData = {
+      text: textInput,
+      author: user,
+      channelId: currChannel.id,
+      createdAt: Date.now()
+    }
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        text: textInput,
-        author: user,
-        channelId: currChannel.id,
-      }),
+      body: JSON.stringify(messageData),
     };
     fetch("/api/messages", options)
       .then((response) => response.json())
       .then((message) => {
+        if(message.error){
+          message = messageData
+        }
         sendMessage(message);
         setTextInput("");
       });

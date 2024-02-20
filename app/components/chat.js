@@ -7,8 +7,6 @@ export default function Chat() {
   const { channels, currChannel } = useContext(ChatContext);
   const messagesEndRef = useRef(null);
 
-  let messages;
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };

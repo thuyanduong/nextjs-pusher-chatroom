@@ -5,7 +5,7 @@ import JoinChannelForm from "./joinChannelForm";
 
 export default function Channels() {
   const [isLoading, setIsLoading] = useState(false)
-  const { user, channels, logout, userChannelNames, joinChannel, currChannel } =
+  const { user, channels, logout, userChannelNames, joinChannel, currChannel, setCurrChannel } =
     useContext(ChatContext);
   const channelsEndRef = useRef(null);
 
@@ -24,16 +24,13 @@ export default function Channels() {
       fetch("/api/channels", options)
         .then((response) => response.json())
         .then((channel) => {
-          setIsLoading(false)
-          let { name } = channel;
-          if (!channels[name]) {
-            joinChannel(channel);
-          } else {
-            setCurrChannel(name);
-          }
+          if(channel.error){
+            channel = {name: channelName, messages: []}
+          } 
+          joinChannel(channel);
         });
     }
-  }, [user, channels.general, channels, joinChannel]);
+  }, [user]);
 
 
   useEffect(() => {

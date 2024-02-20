@@ -9,6 +9,14 @@ on:
   pull_request:
     branches: []
 
+env:
+  PUSHER_APP_ID: ${{secrets.PUSHER_APP_ID}}
+  NEXT_PUBLIC_PUSHER_KEY: ${{secrets.NEXT_PUBLIC_PUSHER_KEY}}
+  PUSHER_SECRET: ${{secrets.PUSHER_SECRET}}
+  NEXT_PUBLIC_PUSHER_CLUSTER: ${{secrets.NEXT_PUBLIC_PUSHER_CLUSTER}}
+  POSTGRES_PRISMA_URL: ${{secrets.POSTGRES_PRISMA_URL}}
+  POSTGRES_URL_NON_POOLING: ${{secrets.POSTGRES_URL_NON_POOLING}}
+
 jobs:
   build:
     runs-on: ubuntu-latest

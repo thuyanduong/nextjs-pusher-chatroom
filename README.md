@@ -1,7 +1,7 @@
-### Learning Notes
+### Learning Notes 
 0. Credits and Inspiration
 
-I built a chatroom app based off of [this project](https://github.com/thuyanduong/pusher-chatroom/tree/master)
+I built a chatroom app based on [this project](https://github.com/thuyanduong/pusher-chatroom/tree/master)
 
 1. [Create a NextJS App](https://nextjs.org/docs/getting-started/installation)
 

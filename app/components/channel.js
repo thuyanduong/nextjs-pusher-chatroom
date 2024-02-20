@@ -29,7 +29,7 @@ export default function Channel(props) {
       setHasNotification(true);
       setNotificationCount((prevState) => prevState + 1);
     }
-  }, [lastMessage]);
+  }, [lastMessage, currChannel.name, name]);
 
   console.log(hasNotification)
   return (

@@ -12,31 +12,29 @@ export default function Channels() {
   // Auto-join general channel when username is set
   useEffect(() => {
     if (user && !channels.general) {
-      postChannel("general");
+      const channelName = "general";
+      setIsLoading(true)
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: channelName }),
+      };
+      fetch("/api/channels", options)
+        .then((response) => response.json())
+        .then((channel) => {
+          setIsLoading(false)
+          let { name } = channel;
+          if (!channels[name]) {
+            joinChannel(channel);
+          } else {
+            setCurrChannel(name);
+          }
+        });
     }
-  }, [user]);
+  }, [user, channels.general, channels, joinChannel]);
 
-  async function postChannel(channelName) {
-    setIsLoading(true)
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: channelName }),
-    };
-    fetch("/api/channels", options)
-      .then((response) => response.json())
-      .then((channel) => {
-        setIsLoading(false)
-        let { name } = channel;
-        if (!channels[name]) {
-          joinChannel(channel);
-        } else {
-          setCurrChannel(name);
-        }
-      });
-  }
 
   useEffect(() => {
     scrollToBottom();

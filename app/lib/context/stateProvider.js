@@ -70,7 +70,7 @@ export default function StateProvider(props) {
       });
       setJoinedChannel(false);
     }
-  }, [currChannel]);
+  }, [currChannel, joinedChannel, channels]);
 
   const properties = {
     user,

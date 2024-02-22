@@ -1,3 +1,5 @@
+import prisma from "@/app/lib/prisma";
+
 export default class Message {
   constructor({ id, text, channelId, author, createdAt }) {
     this.id = id;
@@ -15,11 +17,13 @@ export default class Message {
           text,
           channelId,
           authorId,
-        }, include: {
-          author: true
-        }
+        },
+        include: {
+          author: true,
+        },
       });
     } catch (e) {
+      console.log(e);
       //TO DO: Handle error when message creation fails at the database level
       return null;
     }

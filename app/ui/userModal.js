@@ -11,6 +11,7 @@ export default function UserModal() {
   const { setUser } = useContext(ChatContext);
   const [userNameField, setUserNameField] = useState("");
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,13 +24,21 @@ export default function UserModal() {
     //Is there are no form validation errors, fetch the user
     if (Object.keys(errors).length === 0) {
       try{
+        setIsLoading(true)
         const user = await postFetchUser({ username: userNameField });
+        setIsLoading(false);
         setUser(user);
       }catch(e){
         //TO DO: handle error
       }
     }else{
       setErrors(errors);
+    }
+  }
+
+  function handleChange(e) {
+    if(!isLoading){
+      setUserNameField(e.target.value.trim());
     }
   }
 
@@ -45,7 +54,7 @@ export default function UserModal() {
               <input
                 className="border border-slate-400 rounded-sm p-0.5 w-full"
                 placeholder="Display Name"
-                onChange={(e) => setUserNameField(e.target.value.trim())}
+                onChange={handleChange}
                 minLength={MINLENGTH}
                 maxLength={MAXLENGTH}
                 aria-describedby="username-error"
@@ -59,6 +68,7 @@ export default function UserModal() {
             </div>
             <div className="modal-buttons-container">
               <input
+                disabled={isLoading}
                 type="submit"
                 className="display-name-button"
                 value="Submit"

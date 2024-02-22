@@ -4,17 +4,20 @@ import { postFetchMessage } from "../lib/fetchActions";
 
 export default function NewMessageForm() {
   const [textInput, setTextInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { user, currChannel, channels, setChannels } = useContext(ChatContext);
 
   async function checkSendMessage(e) {
     e.preventDefault();
     if (!textInput.trim()) return;
     try {
+      setIsLoading(true);
       const newMessage = await postFetchMessage({
         text: textInput,
         channelId: currChannel.id,
         authorId: user.id,
       });
+      setIsLoading(false);
       const channel = channels[currChannel.name];
       if (!channel) return;
       channel.messages.push(newMessage);
@@ -27,7 +30,9 @@ export default function NewMessageForm() {
   }
 
   function handleChange(e) {
-    setTextInput(e.target.value);
+    if (!isLoading) {
+      setTextInput(e.target.value);
+    }
   }
 
   function checkEnterPress(e) {
@@ -43,10 +48,16 @@ export default function NewMessageForm() {
         id="new-message"
         placeholder="Your message..."
         value={textInput}
+        disabled={isLoading}
         onChange={handleChange}
         onKeyDown={checkEnterPress}
       />
-      <input type="submit" value="Send" className="send-button" />
+      <input
+        disabled={isLoading}
+        type="submit"
+        value="Send"
+        className="send-button"
+      />
     </form>
   );
 }

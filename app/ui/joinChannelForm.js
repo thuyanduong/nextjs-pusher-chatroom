@@ -5,10 +5,13 @@ const MINLENGTH = 4;
 
 export default function JoinChannelForm({ joinChannel }) {
   const [textInput, setTextInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
   function handleChange(e) {
-    setTextInput(e.target.value);
+    if (!isLoading) {
+      setTextInput(e.target.value);
+    }
   }
 
   function handleSubmit(e) {
@@ -21,8 +24,10 @@ export default function JoinChannelForm({ joinChannel }) {
     }
     //Is there are no form validation errors, join the channel
     if (Object.keys(errors).length === 0) {
-      try {
+      try {    
+        setIsLoading(true);
         joinChannel(textInput);
+        setIsLoading(false);
         setTextInput("");
         setErrors({});
       } catch (e) {
@@ -46,7 +51,12 @@ export default function JoinChannelForm({ joinChannel }) {
           value={textInput}
           onChange={handleChange}
         />
-        <input type="submit" className="join-button" value="+Join" />
+        <input
+          disabled={isLoading}
+          type="submit"
+          className="join-button"
+          value="+Join"
+        />
       </form>
       <div id="username-error" aria-live="polite" aria-atomic="true">
         {errors.channelNameError && (

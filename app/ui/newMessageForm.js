@@ -48,12 +48,12 @@ export default function NewMessageForm() {
         id="new-message"
         placeholder="Your message..."
         value={textInput}
-        disabled={!currChannel}
+        disabled={isLoading}
         onChange={handleChange}
         onKeyDown={checkEnterPress}
       />
       <input
-        disabled={!currChannel || isLoading}
+        disabled={isLoading}
         type="submit"
         value="Send"
         className="send-button"

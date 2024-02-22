@@ -9,6 +9,7 @@ export default class Message {
 
   static async create({ text, channelId, authorId }) {
     let message;
+    console.log({text, channelId, authorId})
     try {
       message = await prisma.message.create({
         data: {
@@ -19,6 +20,7 @@ export default class Message {
           author: true
         }
       });
+      console.log({message})
     } catch (e) {
       //TO DO: Handle error when message creation fails at the database level
       return null;

@@ -2,36 +2,44 @@ import ChatContext from "@/app/lib/context/chatContext";
 import { useContext, useEffect, useRef, useState } from "react";
 import Channel from "./channel";
 import JoinChannelForm from "./joinChannelForm";
+import { postFetchChannel } from "@/app/lib/fetchActions";
+import { pusherClient } from "../lib/pusher/pusherClient";
 
 export default function Channels() {
-  const [isLoading, setIsLoading] = useState(false)
-  const { user, channels, logout, userChannelNames, joinChannel, currChannel, setCurrChannel } =
-    useContext(ChatContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const {
+    user,
+    channels,
+    logout,
+    userChannelNames,
+    setChannels,
+    setUserChannelNames,
+    setCurrChannel,
+  } = useContext(ChatContext);
   const channelsEndRef = useRef(null);
 
-  // Auto-join general channel when username is set
+  // Auto-join 'general' channel when user logs in is set
   useEffect(() => {
     if (user && !channels.general) {
-      const channelName = "general";
-      setIsLoading(true)
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: channelName }),
-      };
-      fetch("/api/channels", options)
-        .then((response) => response.json())
-        .then((channel) => {
-          if(channel.error){
-            channel = {name: channelName, messages: []}
-          } 
-          joinChannel(channel);
-        });
+      joinChannel("general");
+      setIsLoading(true);
     }
   }, [user]);
 
+  async function joinChannel(channelName) {
+    let channel = await postFetchChannel(channelName.trim());
+    if (!channels[channel.name]) {
+      const sub = pusherClient.subscribe(`private-${channel.name}`);
+      setCurrChannel(channel);
+      setChannels((prevState) => ({
+        ...prevState,
+        [channel.name]: { ...channel, sub },
+      }));
+      setUserChannelNames((prevState) => [...prevState, channel.name]);
+    } else {
+      setCurrChannel(channels[channel.name]);
+    }
+  }
 
   useEffect(() => {
     scrollToBottom();
@@ -44,7 +52,7 @@ export default function Channels() {
   return (
     <div className="channels-container black-border">
       <div>
-        <JoinChannelForm />
+        <JoinChannelForm joinChannel={joinChannel} />
       </div>
 
       <div className="channels-list">
@@ -73,7 +81,7 @@ export default function Channels() {
               d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
             />
           </svg>
-          <div className="username">{user}</div>
+          <div className="username">{user.username}</div>
           <button className="exit-button" onClick={logout}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -3,12 +3,12 @@ export default function Message(props) {
   return (
     <div className="message">
       <div>
-        <span className="user-info">{author}</span>{" "}
+        <span className="user-info">{author.username}</span>{" "}
         <span className="timestamp">
           - {new Date(createdAt).toLocaleString()}
         </span>
       </div>
-      <div className="content">{text}</div>
+      <div className="content whitespace-pre-line">{text}</div>
     </div>
   );
 }

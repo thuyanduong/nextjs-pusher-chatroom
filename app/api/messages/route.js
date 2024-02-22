@@ -1,36 +1,15 @@
 // api route for /messages
-import prisma from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
+import Message from "@/app/models/Message";
+import ServerError from "@/app/models/ServerError";
 
 export async function POST(req) {
-  const body = await req.json();
-  const { author, text, channelId } = body;
+  const { text, channelId, authorId } = await req.json();
   try {
-    let message = await prisma.message.create({
-      data: {
-        author,
-        text,
-        channelId,
-      },
-    });
+    const message = await Message.create({ text, channelId, authorId });
     return NextResponse.json(message, { status: 200 });
+    // TO DO: Handle 400 errors like when channel name is invalid
   } catch (e) {
-    return NextResponse.json({
-      error: true,
-      errorMessage: e,
-      message: "Could not add message to database",
-      status: 500,
-    });
+    return NextResponse.json(new ServerError(e), { status: 500 });
   }
-}
-
-export async function GET(req) {
-  const channels = await prisma.message.findMany();
-  return NextResponse.json(
-    {
-      channels,
-      message: "You made a GET request to the endpoint: /api/messages",
-    },
-    { status: 200 }
-  );
 }

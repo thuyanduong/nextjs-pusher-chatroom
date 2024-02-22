@@ -1,44 +1,30 @@
 import { useState, useContext } from "react";
 import ChatContext from "../lib/context/chatContext";
+import { postFetchMessage } from "../lib/fetchActions";
 
 export default function NewMessageForm() {
   const [textInput, setTextInput] = useState("");
-  const { sendMessage, user, currChannel } = useContext(ChatContext);
+  const { user, currChannel, channels, setChannels } = useContext(ChatContext);
 
-  async function postMessage() {
-    const messageData = {
-      text: textInput,
-      author: user,
-      channelId: currChannel.id,
-      createdAt: Date.now()
-    }
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(messageData),
-    };
-    fetch("/api/messages", options)
-      .then((response) => response.json())
-      .then((message) => {
-        if(message.error){
-          message = messageData
-        }
-        sendMessage(message);
-        setTextInput("");
-      });
-  }
-
-  const checkSendMessage = (e) => {
+  async function checkSendMessage(e) {
     e.preventDefault();
     if (!textInput.trim()) return;
     try {
-      postMessage();
+      const newMessage = await postFetchMessage({
+        text: textInput,
+        channelId: currChannel.id,
+        authorId: user.id,
+      });
+      const channel = channels[currChannel.name];
+      if (!channel) return;
+      channel.messages.push(newMessage);
+      channel.sub.trigger("client-message", newMessage);
+      setChannels((prevState) => ({ ...prevState }));
+      setTextInput("");
     } catch {
       //TODO: error handling
     }
-  };
+  }
 
   function handleChange(e) {
     setTextInput(e.target.value);

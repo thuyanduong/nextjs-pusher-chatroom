@@ -11,13 +11,13 @@ export default function NewMessageForm() {
     e.preventDefault();
     if (!textInput.trim()) return;
     try {
-      setIsLoading(true);
+      // setIsLoading(true);
       const newMessage = await postFetchMessage({
         text: textInput,
         channelId: currChannel.id,
         authorId: user.id,
       });
-      setIsLoading(false);
+      // setIsLoading(false);
       const channel = channels[currChannel.name];
       if (!channel) return;
       channel.messages.push(newMessage);

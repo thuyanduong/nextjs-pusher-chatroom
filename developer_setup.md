@@ -25,7 +25,7 @@ NEXT_PUBLIC_PUSHER_CLUSTER=""
 
 - Then run `npm run dev` to start the project.
 - Note: Check your CLI to get the URL the server is running on. By default, it should be `http://localhost:3000`.
-- Note: The app should start up, but the most the features WILL NOT work until the steps below are completed.
+- Note: The app should start up, but most the features WILL NOT work until the steps below are completed. Kill the server.
 
 ## Step 2. Database Set Up
 
@@ -34,6 +34,7 @@ NEXT_PUBLIC_PUSHER_CLUSTER=""
 
 `annduong=# CREATE DATABASE chatroomapp;`
 
+- Exit `psql` by typing `\q` and pressing Enter.
 - Your postgres connection URL will be the following format: `postgres://[user]:[password]@localhost:[port]/chatroomapp`
 - Add this URL to both postgres variables in your `.env` file. See below for an example:
 
@@ -64,4 +65,4 @@ PUSHER_SECRET="xyz123abc456asdf7890"
 NEXT_PUBLIC_PUSHER_CLUSTER="us1"
 ```
 
-To test that you've set up Pusher correctly, restart your app by killing the server and running `npm run dev` again. You should now be able to join channels and send messages.
+To test that you've set up Pusher correctly, start your app by running `npm run dev` again. You should now be able to join channels and send messages. To verify real-time messaging. Open up another browser tab and navigate to the same URL. Send a message in one browser, and that message will show up in the second browser as long as both users are in in the same channel. 

@@ -5,19 +5,17 @@ import ChatContext from "./chatContext";
 import { useEffect, useState } from "react";
 
 export default function StateProvider(props) {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
   const [currChannel, setCurrChannel] = useState(null);
   const [channels, setChannels] = useState({});
   const [userChannelNames, setUserChannelNames] = useState([]);
-  const [joinedChannel, setJoinedChannel] = useState(false);
 
   // reset state
   function logout() {
-    setUser("");
+    setUser(null);
     setCurrChannel(null);
     setChannels({});
     setUserChannelNames([]);
-    setJoinedChannel(false);
     for (const name of userChannelNames) {
       const channel = channels[name];
       channel.sub.unbind("client-message");
@@ -25,52 +23,16 @@ export default function StateProvider(props) {
     }
   }
 
-  function joinChannel(channel) {
-    const sub = pusherClient.subscribe(`private-${channel.name}`);
-    setCurrChannel(channel);
-    setChannels((prevState) => ({
-      ...prevState,
-      [channel.name]: { ...channel, sub },
-    }));
-    setUserChannelNames((prevState) => [...prevState, channel.name]);
-    setJoinedChannel(true);
-  }
-
-  function removeChannel(name) {
-    const newChannels = { ...channels };
-    const newChannelNames = userChannelNames.filter((n) => n !== name);
-    const channel = newChannels[name];
-
-    channel.sub.unbind("client-message");
-    pusherClient.unsubscribe(`private-${name}`);
-    delete newChannels[name];
-
-    let curChannel = currChannel;
-    if (curChannel.name === name) curChannel = channels[newChannelNames[0]];
-    setCurrChannel(curChannel);
-    setChannels(newChannels);
-    setUserChannelNames(newChannelNames);
-  }
-
-  function sendMessage(message) {
-    const channel = channels[currChannel.name];
-    if (!channel) return;
-    channel.messages.push(message);
-    channel.sub.trigger("client-message", message);
-    setChannels((prevState) => ({ ...prevState }));
-  }
-
   useEffect(() => {
-    if (joinedChannel) {
+    if (currChannel) {
       const sub = channels[currChannel.name].sub;
       sub.bind("client-message", (message) => {
         const currentChannel = channels[currChannel.name];
         currentChannel.messages.push(message);
         setChannels((prevState) => ({ ...prevState }));
       });
-      setJoinedChannel(false);
     }
-  }, [currChannel, joinedChannel, channels]);
+  }, [currChannel]);
 
   const properties = {
     user,
@@ -82,11 +44,6 @@ export default function StateProvider(props) {
     setUserChannelNames,
     currChannel,
     setCurrChannel,
-    joinedChannel,
-    setJoinedChannel,
-    joinChannel,
-    sendMessage,
-    removeChannel,
   };
 
   return (

@@ -14,15 +14,26 @@ datasource db {
 model Message {
   id            String      @default(cuid()) @id
   text          String
-  author        String
   createdAt     DateTime    @default(now()) @map(name: "created_at")
-  channel       Channel?    @relation(fields: [channelId], references: [id])
   channelId     String
+  authorId      String
+  channel       Channel?    @relation(fields: [channelId], references: [id])
+  author        User?       @relation(fields: [authorId], references: [id])
 }
 
 model Channel {
   id            String      @default(cuid()) @id
-  name          String
+  name          String      @unique
   createdAt     DateTime    @default(now()) @map(name: "created_at")
-  messages      Message[]
+  messages      Message[]   
+}
+
+model User {
+  id            String      @default(cuid()) @id
+  email         String?      @unique
+  username      String      @unique
+  password      String?
+  createdAt     DateTime    @default(now()) @map(name: "created_at")
+  updatedAt     DateTime    @updatedAt @map(name: "updated_at")
+  messages      Message[] 
 }

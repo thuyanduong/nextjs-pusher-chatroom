@@ -1,8 +1,8 @@
 "use client";
-import Channels from "@/app/components/channelsList";
-import Chat from "@/app/components/chat";
-import Header from "@/app/components/header";
-import UserModal from "@/app/components/userModal";
+import Channels from "@/app/ui/channelsList";
+import Chat from "@/app/ui/chat";
+import Header from "@/app/ui/header";
+import UserModal from "@/app/ui/userModal";
 import ChatContext from "@/app/lib/context/chatContext";
 import { useContext } from "react";
 

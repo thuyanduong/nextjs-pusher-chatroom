@@ -4,7 +4,7 @@ import Message from "./message";
 import NewMessageForm from "./newMessageForm";
 
 export default function Chat() {
-  const { channels, currChannel } = useContext(ChatContext);
+  const { currChannel, channels } = useContext(ChatContext);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -13,7 +13,7 @@ export default function Chat() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [channels, currChannel]);
+  }, [currChannel, channels]);
 
   return (
     <div className="messages-container black-border">

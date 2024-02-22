@@ -1,16 +1,33 @@
+"use client";
+
 import { useContext, useEffect, useState } from "react";
 import ChatContext from "../lib/context/chatContext";
+import { pusherClient } from "../lib/pusher/pusherClient";
 
-export default function Channel(props) {
+export default function Channel({name}) {
   const [hasNotification, setHasNotification] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
-
-  const { currChannel, channels, removeChannel, setCurrChannel } =
+  const { currChannel, channels, setCurrChannel, userChannelNames, setChannels, setUserChannelNames } =
     useContext(ChatContext);
-  const { name } = props;
 
   const channel = channels[name];
   const lastMessage = channel && channel.messages && channel.messages[channel.messages.length - 1];
+
+  function removeChannel(name) {
+    const newChannels = { ...channels };
+    const newChannelNames = userChannelNames.filter((n) => n !== name);
+    const channel = newChannels[name];
+
+    channel.sub.unbind("client-message");
+    pusherClient.unsubscribe(`private-${name}`);
+    delete newChannels[name];
+
+    let curChannel = currChannel;
+    if (curChannel.name === name) curChannel = channels[newChannelNames[0]];
+    setCurrChannel(curChannel);
+    setChannels(newChannels);
+    setUserChannelNames(newChannelNames);
+  }
 
   function handleRemove(e) {
     e.stopPropagation();
@@ -25,13 +42,11 @@ export default function Channel(props) {
 
   useEffect(() => {
     if (currChannel.name !== name) {
-      console.log("last message changed!!!");
       setHasNotification(true);
       setNotificationCount((prevState) => prevState + 1);
     }
   }, [lastMessage]);
 
-  console.log(hasNotification)
   return (
     <div
       className={`channel ${currChannel.name === name ? "active" : ""}`}

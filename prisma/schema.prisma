@@ -17,8 +17,8 @@ model Message {
   createdAt DateTime @default(now()) @map(name: "created_at")
   channelId String
   authorId  String
-  channel   Channel? @relation(fields: [channelId], references: [id])
-  author    User?    @relation(fields: [authorId], references: [id])
+  channel   Channel  @relation(fields: [channelId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
 }
 
 model Channel {
@@ -43,7 +43,8 @@ model User {
 model UserChannel {
   userId            String
   channelId         String
-  notificationCount Int @default(0)
+  notificationCount Int     @default(0)
+  order             Int     @default(0) 
   user              User    @relation(fields: [userId], references: [id])
   channel           Channel @relation(fields: [channelId], references: [id])
 

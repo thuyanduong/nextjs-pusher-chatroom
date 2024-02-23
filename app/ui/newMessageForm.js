@@ -1,30 +1,33 @@
 "use client";
 
 import { useState, useContext } from "react";
-import ChatContext from "../lib/context/chatContext";
-import { createMessageFetch } from "../lib/fetchActions";
+import ChatContext from "./lib/context/chatContext";
+import { createMessageFetch } from "./lib/fetchActions";
+import { sendPusherMessage } from "./lib/pusher/pusherClient";
 
 export default function NewMessageForm() {
   const [textInput, setTextInput] = useState("");
-  const { user, currChannel, channels, setChannels } = useContext(ChatContext);
+  const { currentChannel, user, channels, setChannels } =
+    useContext(ChatContext);
 
-  async function checkSendMessage(e) {
+  async function sendMessage(e) {
     e.preventDefault();
     if (!textInput.trim()) return;
-    try {
-      const newMessage = await createMessageFetch({
-        text: textInput,
-        channelId: currChannel.id,
-        authorId: user.id,
-      });
-      const channel = channels[currChannel.name];
-      setTextInput("");
-      setChannels((prevState) => ({ ...prevState }));
-      channel.messages.push(newMessage);
-      channel.pusherChannel.trigger("client-message", newMessage);
-    } catch {
-      //TODO: error handling
-    }
+    // make a fetch request to create a new message
+    const newMessage = await createMessageFetch({
+      text: textInput,
+      channelId: currentChannel.id,
+      authorId: user.id,
+    });
+    // add the new message to the channels state
+    const channel = channels[currentChannel.name];
+    channel.messages.push(newMessage);
+    // update the channels state
+    setChannels((prevState) => ({ ...prevState }));
+    // trigger the pusher channel to send the new message
+    sendPusherMessage(channel, newMessage);
+    //reset the text input
+    setTextInput("");
   }
 
   function handleChange(e) {
@@ -33,12 +36,12 @@ export default function NewMessageForm() {
 
   function checkEnterPress(e) {
     if (e.keyCode == 13 && e.shiftKey == false) {
-      checkSendMessage(e);
+      sendMessage(e);
     }
   }
 
   return (
-    <form className="new-message-container" onSubmit={checkSendMessage}>
+    <form className="new-message-container" onSubmit={sendMessage}>
       <textarea
         className="new-message-input"
         id="new-message"

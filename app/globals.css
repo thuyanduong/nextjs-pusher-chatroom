@@ -8,7 +8,7 @@
   }
 
   h1 {
-    @apply text-2xl text-center m-3 text-red-500;
+    @apply text-2xl text-center m-3 ;
   }
 
   .black-border {

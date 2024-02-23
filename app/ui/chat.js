@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
 import { useContext, useRef, useEffect } from "react";
-import ChatContext from "../lib/context/chatContext";
 import Message from "./message";
 import NewMessageForm from "./newMessageForm";
+import ChatContext from "./lib/context/chatContext";
 
 export default function Chat() {
-  const { currChannel, channels } = useContext(ChatContext);
+  const { currentChannel, channels } = useContext(ChatContext);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -15,21 +15,29 @@ export default function Chat() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [currChannel, channels]);
+  }, [currentChannel, channels]);
+
+  //If there is no current channel, display nothing
+  //If there is a current channel but no messages, display "No messages..."
+  //Otherwise, display the messages
+  function renderChat() {
+    if (currentChannel && currentChannel.messages) {
+      if (currentChannel.messages.length > 0) {
+        return currentChannel.messages.map((message, index) => (
+          <Message key={index} message={message} />
+        ));
+      } else {
+        return <p className="no-new-messages">No messages...</p>;
+      }
+    } else {
+      return null;
+    }
+  }
 
   return (
     <div className="messages-container black-border">
       <div className="messages-list">
-        {currChannel &&
-          currChannel.messages &&
-          currChannel.messages.length === 0 && (
-            <p className="no-new-messages">No messages...</p>
-          )}
-        {currChannel &&
-          currChannel.messages &&
-          currChannel.messages.map((message, index) => (
-            <Message key={index} message={message} />
-          ))}
+        {renderChat()}
         <div ref={messagesEndRef} />
       </div>
       <NewMessageForm />

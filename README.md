@@ -1,9 +1,11 @@
 #### To Do:
+- build notification persists feature
+
 - Refactor to use react hook forms instead of local state
 
 - Add multiple pages: /(signup_signin), /chatroom, /me
-- Add auth
-- Add Oauth
+    - Add auth
+    - Add Oauth
 
 - Add Editing display name
 

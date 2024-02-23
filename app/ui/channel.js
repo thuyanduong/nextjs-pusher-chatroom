@@ -1,94 +1,60 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
-import ChatContext from "../lib/context/chatContext";
-import { pusherClient } from "../lib/pusher/pusherClient";
-import { getChannelFetch, leaveChannelFetch } from "../lib/fetchActions";
+import { useContext } from "react";
+import ChatContext from "./lib/context/chatContext";
+import { leaveChannelFetch, resetNotification } from "./lib/fetchActions";
+import { unsubscribeFromPusher } from "./lib/pusher/pusherClient";
 
-export default function Channel({ name, id }) {
-  const {joinChannel} = useContext(ChatContext);
-  const [hasNotification, setHasNotification] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(-2);
-  const {
-    user,
-    currChannel,
-    channels,
-    setCurrChannel,
-    userChannelNames,
-    setUserChannelNames,
-  } = useContext(ChatContext);
+export default function Channel({ channel }) {
+  const { name, id, notificationCount } = channel;
+  const { user, channels, channelOrder, currentChannel, setCurrentChannel, setChannels, setChannelOrder } =
+    useContext(ChatContext);
 
-  const channel = channels[name];
-  const channelLength = channels[name].messages.length
   const lastMessage =
     channel &&
     channel.messages &&
     channel.messages[channel.messages.length - 1];
 
-  async function removeChannel(name) {
+  async function removeChannel() {
+    //make a fetch call to leave the channel
     leaveChannelFetch({ userId: user.id, channelId: id });
-    const newChannelNames = userChannelNames.filter((n) => n !== name);
-    const channel = channels[name];
-
-    pusherClient.unsubscribe(`private-${name}`);
-    channel.pusherChannel.unbind("client-message");
-    delete channels[name];
-
-    let curChannel = currChannel;
-    //if there are still channels in the UI left
-    if (newChannelNames.length > 0) {
-      const nameOfNewFirstChannel = newChannelNames[0];
-      // if the current channel is the one being removed, set the current channel to the first channel in the list
-      if (curChannel.name === name)
-        curChannel = channels[nameOfNewFirstChannel];
-      if (!channels[nameOfNewFirstChannel].messages) {
-        let fetchedChannel = getChannelFetch({
-          id: channels[nameOfNewFirstChannel].id,
-        });
-        let messages = fetchedChannel.messages;
-        channels[nameOfNewFirstChannel].messages = messages;
-      }
-      setCurrChannel(curChannel);
+    //unsubscribe from the pusher channel
+    unsubscribeFromPusher(channel)
+    //remove the channel from the state for both channels and channelOrder
+    let newChannels = { ...channels };
+    delete newChannels[name]
+    setChannels(newChannels);
+    let newChannelOrder = channelOrder.filter((channel) => channel.id !== id);
+    setChannelOrder(newChannelOrder);
+    //if the channel being removed is the currentChannel, set the current channel to the first channel in the list
+    if(currentChannel.id === id) {
+      setCurrentChannel(newChannelOrder[0]);
     }
-    // const newChannels = { ...channels };
-    // setChannels(newChannels);
-    setUserChannelNames(newChannelNames);
   }
 
   function handleRemove(e) {
     e.stopPropagation();
-    removeChannel(name);
+    removeChannel();
   }
 
   function handleSelect() {
-    console.log(channels[name].messages)
-    // debugger
-    if (!channels[name].messages) {
-      // debugger
-      joinChannel(user.id, channel.name);
-    }
-    setCurrChannel(channel);
-    setHasNotification(false);
-    setNotificationCount(0);
+    //make a fetch call to reset the notification count
+    resetNotification({ userId: user.id, channelId: id });
+    //update the notification count in the UI to 0 and update state
+    channel.notificationCount = 0;
+    setChannels((prevState) => ({ ...prevState }));
+    //update the current channel to the clicked on channel
+    setCurrentChannel(channel);
   }
-
-  useEffect(() => {
-    if (currChannel?.name !== name) {
-      setHasNotification(true);
-      setNotificationCount((prevState) => prevState + 1);
-    }
-  }, [lastMessage]);
-
- 
 
   return (
     <div
-      className={`channel ${currChannel?.name === name ? "active" : ""}`}
+      className={`channel ${currentChannel?.name === name ? "active" : ""}`}
       onClick={handleSelect}
     >
       <div className="channel-title">
         <h5 className="channel-name">{name}</h5>
-        {hasNotification && notificationCount > 0 && (
+        {!!notificationCount && (
           <span className="notification">{notificationCount}</span>
         )}
         <div>

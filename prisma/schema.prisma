@@ -41,10 +41,11 @@ model User {
 }
 
 model UserChannel {
-  userId    String
-  channelId String
-  user      User    @relation(fields: [userId], references: [id])
-  channel   Channel @relation(fields: [channelId], references: [id])
+  userId            String
+  channelId         String
+  notificationCount Int @default(0)
+  user              User    @relation(fields: [userId], references: [id])
+  channel           Channel @relation(fields: [channelId], references: [id])
 
   @@id([userId, channelId])
 }

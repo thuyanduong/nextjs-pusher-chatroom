@@ -1,4 +1,4 @@
-import { getPusherInstance } from "@/app/lib/pusher/pusherServer";
+import { getPusherInstance } from "@/app/ui/lib/pusher/pusherServer";
 
 getPusherInstance;
 

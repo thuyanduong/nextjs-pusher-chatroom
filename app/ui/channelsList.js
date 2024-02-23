@@ -1,23 +1,17 @@
-"use client"
+"use client";
 
-import ChatContext from "@/app/lib/context/chatContext";
+import ChatContext from "@/app/ui/lib/context/chatContext";
 import { useContext, useEffect, useRef, useState } from "react";
 import Channel from "./channel";
 import JoinChannelForm from "./joinChannelForm";
 
 export default function ChannelsList() {
-  const {
-    user,
-    logout,
-    userChannelNames,
-    channels,
-  } = useContext(ChatContext);
+  const { user, channelOrder, logout } = useContext(ChatContext);
   const channelsEndRef = useRef(null);
-
 
   useEffect(() => {
     scrollToBottom();
-  }, [userChannelNames]);
+  }, [channelOrder]);
 
   const scrollToBottom = () => {
     channelsEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -30,12 +24,14 @@ export default function ChannelsList() {
       </div>
 
       <div className="channels-list">
-        {userChannelNames.length === 0 ? (
+        {channelOrder.length === 0 ? (
           <h6 className="no-channels-joined">
             {"You haven't joined any channels yet"}
           </h6>
         ) : (
-          userChannelNames.map((name) => <Channel name={name} id={channels[name].id} key={name} />)
+          channelOrder.map((channel) => (
+            <Channel channel={channel} key={channel.id} />
+          ))
         )}
         <div ref={channelsEndRef} />
       </div>

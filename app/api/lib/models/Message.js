@@ -1,4 +1,5 @@
-import prisma from "@/app/lib/prisma";
+//BACKEND Message model
+import prisma from "@/app/api/lib/prisma";
 import User from "./User";
 
 export default class Message {
@@ -7,9 +8,10 @@ export default class Message {
     this.text = text;
     this.channelId = channelId;
     this.createdAt = createdAt;
-    this.author = author? new User(author) : null;
+    this.author = author ? new User(author) : null;
   }
 
+  // If successfully created a message, return the newly created message object
   static async create({ text, channelId, authorId }) {
     let message;
     try {
@@ -24,8 +26,7 @@ export default class Message {
         },
       });
     } catch (e) {
-      //TO DO: Handle error when message creation fails at the database level
-      throw e
+      throw "prisma.message.create failed: " + e;
     }
     return new Message(message);
   }

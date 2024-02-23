@@ -1,4 +1,4 @@
-// api route for /messages
+// api route for /api/messages
 import { NextResponse } from "next/server";
 import Message from "@/app/models/Message";
 import ServerError from "@/app/models/ServerError";

@@ -1,4 +1,4 @@
-// api route for /channels/joinChannel
+// api route for /api/channels/joinChannel
 import { NextResponse } from "next/server";
 import ServerError from "@/app/models/ServerError";
 import User from "@/app/models/User";

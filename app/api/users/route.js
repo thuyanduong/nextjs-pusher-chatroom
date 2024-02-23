@@ -1,4 +1,4 @@
-// api route for /users
+// api route for /api/users
 "use server";
 
 import ServerError from "@/app/models/ServerError";

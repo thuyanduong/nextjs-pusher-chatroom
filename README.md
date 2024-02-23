@@ -1,7 +1,7 @@
 #### To Do:
 - Refactor to use react hook forms instead of local state
 
-- Add multiple pages: /, /chatroom, /sign-up, /sign-in, /me
+- Add multiple pages: /(signup_signin), /chatroom, /me
 - Add auth
 - Add Oauth
 

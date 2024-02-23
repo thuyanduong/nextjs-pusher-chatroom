@@ -3,29 +3,55 @@
 import { useContext, useEffect, useState } from "react";
 import ChatContext from "../lib/context/chatContext";
 import { pusherClient } from "../lib/pusher/pusherClient";
+import { getChannelFetch, leaveChannelFetch } from "../lib/fetchActions";
 
-export default function Channel({name}) {
+export default function Channel({ name, id }) {
+  const {joinChannel} = useContext(ChatContext);
   const [hasNotification, setHasNotification] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(0);
-  const { currChannel, channels, setCurrChannel, userChannelNames, setChannels, setUserChannelNames } =
-    useContext(ChatContext);
+  const [notificationCount, setNotificationCount] = useState(-2);
+  const {
+    user,
+    currChannel,
+    channels,
+    setCurrChannel,
+    userChannelNames,
+    setUserChannelNames,
+  } = useContext(ChatContext);
 
   const channel = channels[name];
-  const lastMessage = channel && channel.messages && channel.messages[channel.messages.length - 1];
+  const channelLength = channels[name].messages.length
+  const lastMessage =
+    channel &&
+    channel.messages &&
+    channel.messages[channel.messages.length - 1];
 
-  function removeChannel(name) {
-    const newChannels = { ...channels };
+  async function removeChannel(name) {
+    leaveChannelFetch({ userId: user.id, channelId: id });
     const newChannelNames = userChannelNames.filter((n) => n !== name);
-    const channel = newChannels[name];
+    const channel = channels[name];
 
-    channel.sub.unbind("client-message");
     pusherClient.unsubscribe(`private-${name}`);
-    delete newChannels[name];
+    channel.pusherChannel.unbind("client-message");
+    delete channels[name];
 
     let curChannel = currChannel;
-    if (curChannel.name === name) curChannel = channels[newChannelNames[0]];
-    setCurrChannel(curChannel);
-    setChannels(newChannels);
+    //if there are still channels in the UI left
+    if (newChannelNames.length > 0) {
+      const nameOfNewFirstChannel = newChannelNames[0];
+      // if the current channel is the one being removed, set the current channel to the first channel in the list
+      if (curChannel.name === name)
+        curChannel = channels[nameOfNewFirstChannel];
+      if (!channels[nameOfNewFirstChannel].messages) {
+        let fetchedChannel = getChannelFetch({
+          id: channels[nameOfNewFirstChannel].id,
+        });
+        let messages = fetchedChannel.messages;
+        channels[nameOfNewFirstChannel].messages = messages;
+      }
+      setCurrChannel(curChannel);
+    }
+    // const newChannels = { ...channels };
+    // setChannels(newChannels);
     setUserChannelNames(newChannelNames);
   }
 
@@ -35,25 +61,36 @@ export default function Channel({name}) {
   }
 
   function handleSelect() {
+    console.log(channels[name].messages)
+    // debugger
+    if (!channels[name].messages) {
+      // debugger
+      joinChannel(user.id, channel.name);
+    }
     setCurrChannel(channel);
     setHasNotification(false);
     setNotificationCount(0);
   }
 
   useEffect(() => {
-    if (currChannel.name !== name) {
+    if (currChannel?.name !== name) {
       setHasNotification(true);
       setNotificationCount((prevState) => prevState + 1);
     }
   }, [lastMessage]);
 
+ 
+
   return (
     <div
-      className={`channel ${currChannel.name === name ? "active" : ""}`}
+      className={`channel ${currChannel?.name === name ? "active" : ""}`}
       onClick={handleSelect}
     >
       <div className="channel-title">
         <h5 className="channel-name">{name}</h5>
+        {hasNotification && notificationCount > 0 && (
+          <span className="notification">{notificationCount}</span>
+        )}
         <div>
           <svg
             className="remove-channel w-6 h-6"
@@ -75,7 +112,6 @@ export default function Channel({name}) {
       <div className="timestamp">
         Last message:{" "}
         {lastMessage ? new Date(lastMessage.createdAt).toLocaleString() : "N/A"}
-        {hasNotification && <span className="notification">{notificationCount}</span>}
       </div>
     </div>
   );

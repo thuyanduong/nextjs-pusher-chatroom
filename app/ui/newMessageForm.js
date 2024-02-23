@@ -1,38 +1,34 @@
+"use client";
+
 import { useState, useContext } from "react";
 import ChatContext from "../lib/context/chatContext";
-import { postFetchMessage } from "../lib/fetchActions";
+import { createMessageFetch } from "../lib/fetchActions";
 
 export default function NewMessageForm() {
   const [textInput, setTextInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { user, currChannel, channels, setChannels } = useContext(ChatContext);
 
   async function checkSendMessage(e) {
     e.preventDefault();
     if (!textInput.trim()) return;
     try {
-      setIsLoading(true);
-      const newMessage = await postFetchMessage({
+      const newMessage = await createMessageFetch({
         text: textInput,
         channelId: currChannel.id,
         authorId: user.id,
       });
-      setIsLoading(false);
       const channel = channels[currChannel.name];
-      if (!channel) return;
-      channel.messages.push(newMessage);
-      channel.sub.trigger("client-message", newMessage);
-      setChannels((prevState) => ({ ...prevState }));
       setTextInput("");
+      setChannels((prevState) => ({ ...prevState }));
+      channel.messages.push(newMessage);
+      channel.pusherChannel.trigger("client-message", newMessage);
     } catch {
       //TODO: error handling
     }
   }
 
   function handleChange(e) {
-    if (!isLoading) {
-      setTextInput(e.target.value);
-    }
+    setTextInput(e.target.value);
   }
 
   function checkEnterPress(e) {
@@ -48,16 +44,10 @@ export default function NewMessageForm() {
         id="new-message"
         placeholder="Your message..."
         value={textInput}
-        disabled={isLoading}
         onChange={handleChange}
         onKeyDown={checkEnterPress}
       />
-      <input
-        disabled={isLoading}
-        type="submit"
-        value="Send"
-        className="send-button"
-      />
+      <input type="submit" value="Send" className="send-button" />
     </form>
   );
 }

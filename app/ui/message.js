@@ -3,7 +3,7 @@ export default function Message(props) {
   return (
     <div className="message">
       <div>
-        <span className="user-info">{author.username}</span>{" "}
+        <span className="user-info">{author.displayName}</span>{" "}
         <span className="timestamp">
           - {new Date(createdAt).toLocaleString()}
         </span>

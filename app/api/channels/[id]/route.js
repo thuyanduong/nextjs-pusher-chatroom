@@ -9,6 +9,6 @@ export async function GET(req, context) {
     return NextResponse.json(channel, { status: 200 });
     // TO DO: Handle 400 errors like when channel name is invalid or not found
   } catch (e) {
-    return NextResponse.json(new ServerError(e), { status: 500 });
+    return NextResponse.json(ServerError(e), { status: 500 });
   }
 }

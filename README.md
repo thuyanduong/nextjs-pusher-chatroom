@@ -1,8 +1,5 @@
 #### To Do:
-- Timeout feature
-- Refactor Sign in to use email 
-- Refactor to use useForm instead of local state
-- Implement userchannels model
+- Refactor to use react hook forms instead of local state
 
 - Add multiple pages: /, /chatroom, /sign-up, /sign-in, /me
 - Add auth

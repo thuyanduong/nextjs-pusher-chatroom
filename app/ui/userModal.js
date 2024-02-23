@@ -1,45 +1,68 @@
 "use client";
 
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import ChatContext from "@/app/lib/context/chatContext";
-import { postFetchUser } from "../lib/fetchActions";
+import { createOrFindUserFetch, getChannelFetch } from "../lib/fetchActions";
+import { pusherClient } from "../lib/pusher/pusherClient";
 
-const MAXLENGTH = 25;
-const MINLENGTH = 1;
+const MAXLENGTH = 320;
+const MINLENGTH = 3;
 
 export default function UserModal() {
-  const { setUser } = useContext(ChatContext);
-  const [userNameField, setUserNameField] = useState("");
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const { setUser, setUserChannelNames, setChannels, setCurrChannel } =
+    useContext(ChatContext);
+  const [emailField, setEmailField] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    let errors = {};
-    if (!userNameField) {
-      errors.userNameError = "Name is required.";
-    } else if (userNameField.length > MAXLENGTH) {
-      errors.userNameError = `Name must be ${MAXLENGTH} characters or less.`;
-    }
-    //Is there are no form validation errors, fetch the user
-    if (Object.keys(errors).length === 0) {
-      try{
-        setIsLoading(true)
-        const user = await postFetchUser({ username: userNameField });
-        setIsLoading(false);
-        setUser(user);
-      }catch(e){
-        //TO DO: handle error
+    try {
+      //grab data about user and channels (just their names, but not their messages)
+      const user = await createOrFindUserFetch({ email: emailField });
+      if (!user.error) {
+        //join membered channels on sign in
+
+        //1. create a new userChannelNames state and fill it with just the names of the user's channels
+        const userChannelNames = [];
+        //2. create a new channels state and add the object {[channeName]: {id, name, createdAt, pusherChannel}}
+        const channels = {};
+
+        let fetchedChannels = Promise.all(
+          user.channels.map((channel) => {
+            return getChannelFetch({ id: channel.id });
+          })
+        );
+
+        fetchedChannels.then((channels) => {
+          channels.forEach((channel) => {
+            userChannelNames.push(channel.name);
+            const pusherChannel = pusherClient.subscribe(
+              `private-${channel.name}`
+            );
+            channels[channel.name] = { ...channel, pusherChannel };
+            pusherChannel.bind("client-message", (message) => {
+              const currentChannel = channels[channel.name];
+              currentChannel.messages.push(message);
+              setChannels((prevState) => ({ ...prevState }));
+            });
+          });
+          //3. If the user is part of at least one channel, make it the current channel
+          let firstChannel = channels[0];
+          if (firstChannel) {
+            setCurrChannel(channels[firstChannel.name]);
+          }
+          setUser(user);
+          setUserChannelNames(userChannelNames);
+          setChannels(channels);
+        });
       }
-    }else{
-      setErrors(errors);
+    } catch (e) {
+      //TO DO: properly handle error
+      throw e;
     }
   }
 
   function handleChange(e) {
-    if(!isLoading){
-      setUserNameField(e.target.value.trim());
-    }
+    setEmailField(e.target.value.trim());
   }
 
   return (
@@ -47,28 +70,22 @@ export default function UserModal() {
       <div className="modal">
         <div className="modal-box">
           <div className="modal-header">
-            <h2>Choose a display name</h2>
+            <h2>Log in with Email</h2>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="modal-content">
               <input
                 className="border border-slate-400 rounded-sm p-0.5 w-full"
-                placeholder="Display Name"
+                placeholder="Email Address"
                 onChange={handleChange}
                 minLength={MINLENGTH}
                 maxLength={MAXLENGTH}
                 aria-describedby="username-error"
-                value={userNameField}
+                value={emailField}
               />
-              <div id="username-error" aria-live="polite" aria-atomic="true">
-                {errors.userNameError && (
-                  <p className="red-error-message">{errors.userNameError}</p>
-                )}
-              </div>
             </div>
             <div className="modal-buttons-container">
               <input
-                disabled={isLoading}
                 type="submit"
                 className="display-name-button"
                 value="Submit"

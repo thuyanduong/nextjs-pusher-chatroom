@@ -1,3 +1,5 @@
+"use client"
+
 import { useContext, useRef, useEffect } from "react";
 import ChatContext from "../lib/context/chatContext";
 import Message from "./message";

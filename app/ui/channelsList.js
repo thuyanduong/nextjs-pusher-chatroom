@@ -1,45 +1,19 @@
+"use client"
+
 import ChatContext from "@/app/lib/context/chatContext";
 import { useContext, useEffect, useRef, useState } from "react";
 import Channel from "./channel";
 import JoinChannelForm from "./joinChannelForm";
-import { postFetchChannel } from "@/app/lib/fetchActions";
-import { pusherClient } from "../lib/pusher/pusherClient";
 
-export default function Channels() {
-  const [isLoading, setIsLoading] = useState(false);
+export default function ChannelsList() {
   const {
     user,
-    channels,
     logout,
     userChannelNames,
-    setChannels,
-    setUserChannelNames,
-    setCurrChannel,
+    channels,
   } = useContext(ChatContext);
   const channelsEndRef = useRef(null);
 
-  // Auto-join 'general' channel when user logs in is set
-  useEffect(() => {
-    if (user && !channels.general) {
-      joinChannel("general");
-      setIsLoading(true);
-    }
-  }, [user]);
-
-  async function joinChannel(channelName) {
-    let channel = await postFetchChannel(channelName.trim());
-    if (!channels[channel.name]) {
-      const sub = pusherClient.subscribe(`private-${channel.name}`);
-      setCurrChannel(channel);
-      setChannels((prevState) => ({
-        ...prevState,
-        [channel.name]: { ...channel, sub },
-      }));
-      setUserChannelNames((prevState) => [...prevState, channel.name]);
-    } else {
-      setCurrChannel(channels[channel.name]);
-    }
-  }
 
   useEffect(() => {
     scrollToBottom();
@@ -52,16 +26,16 @@ export default function Channels() {
   return (
     <div className="channels-container black-border">
       <div>
-        <JoinChannelForm joinChannel={joinChannel} />
+        <JoinChannelForm />
       </div>
 
       <div className="channels-list">
         {userChannelNames.length === 0 ? (
           <h6 className="no-channels-joined">
-            {isLoading ? "Loading..." : "You haven't joined any channels yet"}
+            {"You haven't joined any channels yet"}
           </h6>
         ) : (
-          userChannelNames.map((name) => <Channel name={name} key={name} />)
+          userChannelNames.map((name) => <Channel name={name} id={channels[name].id} key={name} />)
         )}
         <div ref={channelsEndRef} />
       </div>
@@ -81,7 +55,7 @@ export default function Channels() {
               d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
             />
           </svg>
-          <div className="username">{user.username}</div>
+          <div className="username">{user.displayName}</div>
           <button className="exit-button" onClick={logout}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

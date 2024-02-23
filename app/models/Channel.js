@@ -1,4 +1,5 @@
 import prisma from "@/app/lib/prisma";
+import Message from "./Message";
 
 const messagesObj = {
   messages: {
@@ -13,7 +14,7 @@ export default class Channel {
     this.id = id;
     this.name = name;
     this.createdAt = createdAt;
-    this.messages = messages;
+    this.messages = messages?.map((message) => new Message(message));
   }
 
   static async getAllChannels() {
@@ -21,11 +22,12 @@ export default class Channel {
       return await prisma.channel.findMany();
     } catch (e) {
       //TO DO: Handle error when can't connect to database
-      return null;
+      throw e
     }
   }
 
   static async findOrCreate({ name }) {
+
     name = name.toLowerCase().replace(/ /g, "-");
     const foundChannel = await Channel.findByChannelName({ name });
     if (foundChannel) {
@@ -37,6 +39,7 @@ export default class Channel {
 
   static async findByChannelName({ name }) {
     let channel;
+
     try {
       channel = await prisma.channel.findUnique({
         where: {
@@ -46,7 +49,7 @@ export default class Channel {
       });
     } catch (e) {
       //TO DO: Handle error when can't connect to database
-      return null;
+      throw e
     }
     return channel ? new Channel(channel) : null;
   }
@@ -62,7 +65,7 @@ export default class Channel {
       });
     } catch (e) {
       //TO DO: Handle error when can't connect to database
-      return null;
+      throw e
     }
     return channel ? new Channel(channel) : null;
   }
@@ -80,7 +83,7 @@ export default class Channel {
       });
     } catch (e) {
       //TO DO: Handle error when channel creation fails at the database level
-      return null;
+      throw e
     }
     return new Channel(channel);
   }

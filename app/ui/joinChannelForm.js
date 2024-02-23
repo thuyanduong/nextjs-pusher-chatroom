@@ -1,9 +1,13 @@
-import { useState } from "react";
+"use client"
+
+import { useContext, useState } from "react";
+import ChatContext from "../lib/context/chatContext";
 
 const MAXLENGTH = 25;
 const MINLENGTH = 4;
 
-export default function JoinChannelForm({ joinChannel }) {
+export default function JoinChannelForm() {
+  const {joinChannel, user} = useContext(ChatContext);
   const [textInput, setTextInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -26,7 +30,7 @@ export default function JoinChannelForm({ joinChannel }) {
     if (Object.keys(errors).length === 0) {
       try {    
         setIsLoading(true);
-        joinChannel(textInput);
+        joinChannel(user.id, textInput);
         setIsLoading(false);
         setTextInput("");
         setErrors({});

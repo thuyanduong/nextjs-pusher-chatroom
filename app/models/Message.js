@@ -1,12 +1,13 @@
 import prisma from "@/app/lib/prisma";
+import User from "./User";
 
 export default class Message {
   constructor({ id, text, channelId, author, createdAt }) {
     this.id = id;
     this.text = text;
     this.channelId = channelId;
-    this.author = author;
     this.createdAt = createdAt;
+    this.author = author? new User(author) : null;
   }
 
   static async create({ text, channelId, authorId }) {
@@ -23,9 +24,8 @@ export default class Message {
         },
       });
     } catch (e) {
-      console.log(e);
       //TO DO: Handle error when message creation fails at the database level
-      return null;
+      throw e
     }
     return new Message(message);
   }

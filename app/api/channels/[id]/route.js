@@ -1,3 +1,5 @@
+// api route for /api/channels/:id
+
 import Channel from "@/app/models/Channel";
 import { NextResponse } from "next/server";
 import ServerError from "@/app/models/ServerError";

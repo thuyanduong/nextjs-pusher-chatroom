@@ -1,7 +1,7 @@
 export default class ServerError {
-  constructor(errorMessage) {
-    this.errorMessage = errorMessage;
+  constructor(error) {
     this.success = false;
-    this.error = true;
+    this.error = error;
+    this.status = 500;
   }
 }

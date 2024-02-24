@@ -30,7 +30,7 @@ export default function NewMessageForm() {
   async function sendMessage({ textInput }) {
     try {
       // make a fetch request to create a new message
-      const newMessage = await createMessageFetch({
+      let newMessage = await createMessageFetch({
         text: textInput,
         channelId: currentChannel.id,
         authorId: user.id,

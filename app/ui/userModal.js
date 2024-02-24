@@ -24,8 +24,9 @@ export default function UserModal() {
     handlePusherMessage,
     currentChannel,
   } = useContext(ChatContext);
+
   const formSchema = z.object({
-    email: z.string().email(),
+    email: z.string().email().trim().toLowerCase(),
   });
 
   const {
@@ -34,7 +35,6 @@ export default function UserModal() {
     setError,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { email: "" },
     resolver: zodResolver(formSchema),
   });
 

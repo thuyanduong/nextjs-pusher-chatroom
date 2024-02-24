@@ -83,7 +83,7 @@
   }
 
   .send-button {
-    @apply text-white bg-blue-700 hover:bg-blue-400 disabled:bg-blue-400 px-5 rounded-sm ml-1 h-4/5;
+    @apply text-white bg-blue-700 hover:bg-blue-400 disabled:bg-blue-400 px-5 rounded-sm ml-1 h-3/5;
   }
 
   .exit-button {

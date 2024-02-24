@@ -22,12 +22,16 @@ export async function createOrFindUserFetch({ email }) {
     },
     body: JSON.stringify({ email }),
   };
-  const response = await fetch("/api/users", options);
-  const user = await response.json();
-  if (user.error) {
-    throw new Error(user.error);
+  try {
+    const response = await fetch("/api/users", options);
+    const user = await response.json();
+    if (user.error) {
+      throw new Error(user.error);
+    }
+    return user;
+  } catch (e) {
+    throw new Error(e);
   }
-  return user;
 }
 
 export async function joinChannelFetch({ userId, channelName }) {
@@ -70,7 +74,7 @@ export async function getChannelFetch({ id }) {
   return channel;
 }
 
-export async function resetNotification({userId, channelId}) {
+export async function resetNotification({ userId, channelId }) {
   const options = {
     method: "POST",
     headers: {
@@ -86,7 +90,7 @@ export async function resetNotification({userId, channelId}) {
   return boolean;
 }
 
-export async function incrementNotification({userId, channelId}) {
+export async function incrementNotification({ userId, channelId }) {
   const options = {
     method: "POST",
     headers: {
@@ -100,4 +104,4 @@ export async function incrementNotification({userId, channelId}) {
     throw new Error(userChannel.error);
   }
   return userChannel;
-} 
+}

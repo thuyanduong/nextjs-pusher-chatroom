@@ -1,6 +1,4 @@
 //FRONTEND Channel model
-import Message from "./Message";
-
 export default class Channel {
   constructor({
     id,
@@ -16,7 +14,7 @@ export default class Channel {
     this.createdAt = createdAt;
     this.notificationCount = notificationCount;
     this.order = order;
-    this.messages = messages?.map((message) => new Message(message));
+    this.messages = messages;
     this.pusherChannel = pusherChannel;
   }
 }

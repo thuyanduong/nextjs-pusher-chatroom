@@ -29,11 +29,12 @@ X user logs out, logs in, those channels have been left
 
 Real-time:
 
-- real-time notification and timestamp shows up on a non-active channel
-- real-time notification goes away when clicked on that channel
+X real-time notification and timestamp shows up on a non-active channel
+X real-time notification goes away when clicked on that channel
 
 Other:
-- joining an existing channel just makes that channel active
-- too many messages in active chat result in scroll bar and pushed messages push
-- too many channels result in scroll bar that pushed channels up
-- clicking on a notification channel with lots of messages results in a fast scroll down
+
+X joining an existing channel just makes that channel active
+X too many messages in active chat result in scroll bar and pushed messages push
+X too many channels result in scroll bar that pushed channels up
+X clicking on a notification channel with lots of messages results in a fast scroll down

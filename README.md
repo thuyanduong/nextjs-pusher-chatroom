@@ -1,28 +1,26 @@
 #### To Do:
-- build notification persists feature
-
-- Refactor to use react hook forms instead of local state
 
 - Add multiple pages: /(signup_signin), /chatroom, /me
-    - Add auth
-    - Add Oauth
+
+  - Add auth
+  - Add Oauth
 
 - Add Editing display name
 
 # Chat App
 
-This project was built using: 
-* [NextJS](https://nextjs.org/) as the fullstack framework
-* [Prisma](https://www.prisma.io/) as the ORM database query tool
-* [Pusher](https://pusher.com/) to provide real-time communication between clients
-* [Vercel](https://vercel.com/) is where the app is deployed, as well as where the Postgres database is hosted
+This project was built using:
+
+- [NextJS](https://nextjs.org/) as the fullstack framework
+- [Prisma](https://www.prisma.io/) as the ORM database query tool
+- [Pusher](https://pusher.com/) to provide real-time communication between clients
+- [Vercel](https://vercel.com/) is where the app is deployed, as well as where the Postgres database is hosted
 
 Chatroom app based off of [this project](https://github.com/ijjk/pusher-chatroom) by [ijjk](https://github.com/ijjk).
 
 ## Live Webapp
 
-* https://nextjs-pusher-chatroom.vercel.app/
-
+- https://nextjs-pusher-chatroom.vercel.app/
 
 ## How to Set Up this Project Locally
 
@@ -52,7 +50,7 @@ NEXT_PUBLIC_PUSHER_CLUSTER=""
 
 - Then run `npm run dev` to start the project.
 - Note: Check your CLI to get the URL the server is running on. By default, it should be `http://localhost:3000`.
-- Note: The app should start up, but most the features WILL NOT work until the steps below are completed. 
+- Note: The app should start up, but most the features WILL NOT work until the steps below are completed.
 
 ### Step 2. Database Set Up
 
@@ -72,7 +70,7 @@ POSTGRES_URL_NON_POOLING="postgres://user:password@localhost:5432/chatroomapp"
 
 - In your terminal, run `npx prisma db push`.
 
-To test that you've set up your database correctly, run `prisma studio` in the command line. If you get an error, run `npm i -g prisma`, then run `prisma studio` again. If everything is good, a GUI will open in your browser (navigate to `http://localhost:5555` if not automatically opened). 
+To test that you've set up your database correctly, run `prisma studio` in the command line. If you get an error, run `npm i -g prisma`, then run `prisma studio` again. If everything is good, a GUI will open in your browser (navigate to `http://localhost:5555` if not automatically opened).
 
 ### Step 3. Generate an AUTH Secret
 
@@ -103,5 +101,4 @@ PUSHER_SECRET="xyz123abc456asdf7890"
 NEXT_PUBLIC_PUSHER_CLUSTER="us1"
 ```
 
-To test that you've set up Pusher correctly, restart your app (`npm run dev`). You should now be able to send messages in real time. To verify, open up another browser tab and navigate to the same URL. Send a message in one browser, and that message will show up in the second browser as long as both users are in the same channel. 
-
+To test that you've set up Pusher correctly, restart your app (`npm run dev`). You should now be able to send messages in real time. To verify, open up another browser tab and navigate to the same URL. Send a message in one browser, and that message will show up in the second browser as long as both users are in the same channel.
